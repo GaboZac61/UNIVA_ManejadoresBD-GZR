@@ -1,0 +1,17 @@
+======== PROCEDURE CREAR: PAISES ========
+
+DELIMITER $$
+CREATE PROCEDURE crear_pais(IN n_pais VARCHAR(50), IN n_continente VARCHAR(50), IN poblacion INT, IN moneda VARCHAR(3), IN idioma VARCHAR(15), IN pib INT, IN act_economica VARCHAR(100))
+BEGIN
+SET @id_c = (SELECT ID_Continente FROM continente WHERE Nombre_Continente = n_continente);
+IF @id_c = NULL THEN
+INSERT INTO continente (Nombre_Continente, Expansion_Terreno, Porcentaje_planeta) VALUES(n_continente, 0, 0);
+SET @nuevo_id = (SELECT ID_Continente FROM continente WHERE Nombre_Continente = n_continente);
+INSERT INTO pais (ID_Continente, Nombre_pais, Poblacion, Moneda, Idioma, PIB, Act_principal) VALUES(@nuevo_id, n_pais, poblacion, moneda, idioma, pib, act_economica);
+ELSE
+INSERT INTO pais (ID_Continente, Nombre_pais, Poblacion, Moneda, Idioma, PIB, Act_principal) VALUES(@id_c, n_pais, poblacion, moneda, idioma, pib, act_economica);
+END IF;
+END$$
+
+DELIMITER ;
+
