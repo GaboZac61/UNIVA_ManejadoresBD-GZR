@@ -15,3 +15,73 @@ END$$
 
 DELIMITER ;
 
+======== PROCEDURE CREAR: CONTINENTES ========
+
+DELIMITER $$
+CREATE PROCEDURE crear_continente(IN nombre VARCHAR(50), IN expand INT, IN porcentaje DOUBLE)
+BEGIN
+SET @id_c = (SELECT ID_Continente FROM continente WHERE Nombre_Continente = nombre);
+IF @id_c = NULL THEN
+INSERT INTO continente (Nombre_Continente, Expansion_Terreno, Porcentaje_planeta) VALUES(nombre, expand, porcentaje);
+ELSE
+UPDATE continente SET Expansion_Terreno = expand, Porcentaje_planeta = porcentaje WHERE ID_Continente = @id_c;
+END IF;
+END$$
+
+DELIMITER;
+
+======== PROCEDURE ACTUALIZAR: CONTINENTES ========
+
+DELIMITER $$
+CREATE PROCEDURE actualizar_continente(IN id INT, IN nombre VARCHAR(50), IN expand INT, IN porcentaje DOUBLE, OUT estado INT)
+BEGIN
+SET @contenido_pais = (SELECT COUNT(*) FROM pais WHERE ID_Continente = id);
+SET @comparador_id = (SELECT ID_Continente FROM continente WHERE Nombre_Continente = nombre);
+SET @comparador_nombre = (SELECT Nombre_Continente FROM continente WHERE Nombre_Continente = nombre);
+IF @comparador_id != id THEN
+SET estado = 2;
+ELSEIF @contenido_pais > 0 && @comparador_nombre = nombre THEN
+UPDATE continente SET Expansion_Terreno = expand, Porcentaje_planeta = porcentaje WHERE ID_Continente = id;
+SET estado = 1;
+ELSEIF @contenido_pais = 0 THEN
+UPDATE continente SET Nombre_Continente = nombre, Expansion_Terreno = expand, Porcentaje_planeta = porcentaje WHERE ID_Continente = id;
+SET estado = 1;
+ELSE
+SET estado = 0;
+END IF;
+END$$
+
+DELIMITER;
+
+======== PROCEDURE ACTUALIZAR: PAIS ========
+
+DELIMITER$$
+CREATE PROCEDURE actualizar_pais(IN id_pais INT, IN n_pais VARCHAR(50), IN n_continente VARCHAR(50), IN poblacion INT, IN moneda VARCHAR(3), IN idioma VARCHAR(15), IN pib INT, IN act_economica VARCHAR(100))
+BEGIN
+SET @id_c = (SELECT ID_Continente FROM continente WHERE Nombre_Continente = n_continente);
+IF @id_c = NULL THEN
+INSERT INTO continente (Nombre_Continente, Expansion_Terreno, Porcentaje_planeta) VALUES(n_continente, 0, 0);
+SET @nuevo_id = (SELECT ID_Continente FROM continente WHERE Nombre_Continente = n_continente);
+UPDATE pais SET ID_Continente = @nuevo_id, Nombre_pais = n_pais, Poblacion = poblacion, Moneda = moneda, Idioma = idioma, PIB = pib, Act_principal = act_economica WHERE ID_pais = id_pais;
+ELSE
+UPDATE pais SET ID_Continente = @id_c, Nombre_pais = n_pais, Poblacion = poblacion, Moneda = moneda, Idioma = idioma, PIB = pib, Act_principal = act_economica WHERE ID_pais = id_pais;
+END IF;
+END
+
+DELIMITER;
+
+======== PROCEDURE ELIMINAR: PAIS ========
+
+DELIMITER$$
+CREATE PROCEDURE eliminar_pais(IN id INT, OUT estado INT)
+BEGIN
+SET @validador = (SELECT ID_pais FROM pais WHERE ID_Pais = id);
+IF @validador = NULL THEN
+SET estado = 0;
+ELSE
+DELETE FROM pais WHERE ID_pais = id;
+SET estado = 1;
+END IF;
+END
+
+DELIMITER;
