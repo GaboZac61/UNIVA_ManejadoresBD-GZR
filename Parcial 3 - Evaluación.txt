@@ -2,7 +2,7 @@
 DELIMITER $$
 CREATE PROCEDURE consulta_paises()
 BEGIN
-SELECT pais.*, continente.Nombre_Continente FROM pais INNER JOIN continente ON continente.ID_Continente=pais.ID_Continente;
+SELECT pais.Nombre_pais, continente.Nombre_Continente, pais.Poblacion, pais.Moneda, pais.Idioma, pais.PIB, pais.Act_principal FROM pais INNER JOIN continente ON continente.ID_Continente=pais.ID_Continente;
 END$$
 
 DELIMITER ;
