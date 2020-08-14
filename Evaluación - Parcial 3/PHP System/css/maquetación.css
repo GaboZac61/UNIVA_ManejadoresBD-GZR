@@ -1,0 +1,37 @@
+div{
+	border: 1px solid;
+
+}
+.navegacion{
+	display: inline;
+	margin-right: 30px;
+}
+
+.contenido{
+	margin-top: 25px;
+	margin-bottom: 52px;
+}
+
+/*Diseño de elementos.*/
+.principal{
+	background-color: #eaeaea;
+}
+
+.pies-pagina{
+	background-color: #aa00ff;
+	color: yellow;
+}
+.barra-navegacion{
+background-color: red;
+}
+
+@media only screen and (max-width: 500px) {
+  .contenido {
+    margin-top: 100px;
+  }
+  .navegacion{
+  	text-align: center;
+	display: block;
+	margin-right: 30px;
+}
+}
